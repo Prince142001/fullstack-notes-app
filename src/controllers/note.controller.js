@@ -57,6 +57,35 @@ const fetchAllNotes = async (req, res) => {
     }
 };
 
+const searchNote = async (req, res) => {
+    try {
+        const { noteId } = req.params;
+
+        const note = await Note.findOne({
+            _id: noteId,
+            createdBy: req.user._id,
+        });
+
+        if (!note) {
+            console.log("Note not found with this ID");
+            return res.status(404).json({
+                message: "Note not found with this ID",
+            });
+        }
+
+        res.status(200).json({
+            message: "Note found successfully",
+            note: note,
+        });
+    } catch (error) {
+        console.log("Failed to find note");
+        res.status(500).json({
+            message: "Failed to find note",
+            error: error.message,
+        });
+    }
+};
+
 const updateNote = async (req, res) => {
     try {
         const { noteId } = req.params;
@@ -116,7 +145,10 @@ const deleteNote = async (req, res) => {
     try {
         const { noteId } = req.params;
 
-        const note = await Note.findByIdAndDelete({ _id: noteId });
+        const note = await Note.findOneAndDelete({
+            _id: noteId,
+            createdBy: req.user._id,
+        });
 
         if (!note) {
             console.log("Note not found with this ID");
@@ -137,4 +169,4 @@ const deleteNote = async (req, res) => {
     }
 };
 
-export { createNote, fetchAllNotes, updateNote, deleteNote };
+export { createNote, fetchAllNotes, searchNote, updateNote, deleteNote };

@@ -3,6 +3,7 @@ import {
     createNote,
     deleteNote,
     fetchAllNotes,
+    searchNote,
     updateNote,
 } from "../controllers/note.controller.js";
 import { verifyJwtToken } from "../middlewares/auth.middleware.js";
@@ -13,6 +14,6 @@ router.use(verifyJwtToken);
 
 router.route("/").post(createNote).get(fetchAllNotes);
 
-router.route("/:noteId").post(updateNote).delete(deleteNote);
+router.route("/:noteId").get(searchNote).patch(updateNote).delete(deleteNote);
 
 export default router;
