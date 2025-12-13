@@ -146,4 +146,35 @@ const updateUserProfile = async (req, res) => {
     }
 };
 
-export { registerUser, loginUser, getUserProfile, updateUserProfile };
+const deleteUserProfile = async (req, res) => {
+    try {
+        const deleteUser = await User.findByIdAndDelete(req.user._id);
+        if (!deleteUser) {
+            console.log("User not found");
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const options = {
+            httpOnly: true,
+            secure: true,
+        };
+
+        return res.status(200).clearCookie("accessToken", options).json({
+            message: "User deleted successfully",
+        });
+    } catch (error) {
+        console.log("Error deleting user", error);
+        res.status(500).json({
+            message: "Failed to delete user",
+            error: error.message,
+        });
+    }
+};
+
+export {
+    registerUser,
+    loginUser,
+    getUserProfile,
+    updateUserProfile,
+    deleteUserProfile,
+};

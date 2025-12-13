@@ -4,6 +4,7 @@ import {
     loginUser,
     getUserProfile,
     updateUserProfile,
+    deleteUserProfile,
 } from "../controllers/user.controller.js";
 import { verifyJwtToken } from "../middlewares/auth.middleware.js";
 
@@ -15,6 +16,7 @@ router.route("/login").post(loginUser);
 router
     .route("/profile")
     .get(verifyJwtToken, getUserProfile)
-    .patch(verifyJwtToken, updateUserProfile);
+    .patch(verifyJwtToken, updateUserProfile)
+    .delete(verifyJwtToken, deleteUserProfile);
 
 export default router;
