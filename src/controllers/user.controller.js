@@ -49,6 +49,7 @@ const registerUser = async (req, res) => {
         console.log("Error in register user ", error);
         res.status(500).json({
             message: "Failed to register user.",
+            error: error.message,
         });
     }
 };
@@ -112,23 +113,27 @@ const getUserProfile = async (req, res) => {
 const updateUserProfile = async (req, res) => {
     try {
         const { firstName, lastName } = req.body;
-        if (!firstName && !lastName) {
-            console.log(
-                "Please provide fields to update firstName or lastName"
-            );
+
+        const updates = {};
+
+        if (firstName) {
+            updates.firstName = firstName;
+        }
+
+        if (lastName) {
+            updates.lastName = lastName;
+        }
+
+        if (Object.keys(updates).length === 0) {
             return res.status(400).json({
-                message:
-                    "Please provide fields to update firstName or lastName",
+                message: "No fields provided for update",
             });
         }
 
         const updatedUser = await User.findByIdAndUpdate(
             req.user._id,
             {
-                $set: {
-                    firstName: firstName,
-                    lastName: lastName,
-                },
+                $set: updates,
             },
             { new: true }
         ).select("-password");
