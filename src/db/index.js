@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-import constants from "../constants.js";
+import { DB_USER } from "../constants.js";
 
 const connectDB = async () => {
     try {
         const connectionInstance = await mongoose.connect(
-            `${process.env.MONGODB_URI}/${constants}`
+            `${process.env.MONGODB_URI}/${DB_USER}`
         );
         console.log(
             "MongoDB connected | Connection host: ",
